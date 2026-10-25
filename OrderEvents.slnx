@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OrderEvents.Api/OrderEvents.Api.csproj" />
+    <Project Path="src/OrderEvents.Contracts/OrderEvents.Contracts.csproj" />
+    <Project Path="src/OrderEvents.Infrastructure/OrderEvents.Infrastructure.csproj" />
+    <Project Path="src/OrderEvents.Worker/OrderEvents.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OrderEvents.Tests/OrderEvents.Tests.csproj" />
+  </Folder>
+</Solution>

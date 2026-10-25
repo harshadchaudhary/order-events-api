@@ -1,0 +1,53 @@
+### Manual smoke test. Works in VS Code (REST Client) and Visual Studio.
+### Change @host to http://localhost:8080 when running via docker compose.
+
+@host = http://localhost:5080
+
+### Health
+GET {{host}}/health
+
+### Create an order — expect 201 with status "Pending"
+# @name created
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "cust-1001",
+  "sku": "KEYBOARD-87",
+  "quantity": 2,
+  "unitPrice": 2499.50
+}
+
+### Read it back — first call hits the database and populates Redis,
+### the second is served from the cache.
+GET {{host}}/api/orders/{{created.response.body.id}}
+
+### A customer's recent orders
+GET {{host}}/api/customers/cust-1001/orders?limit=10
+
+### Validation failure — expect 400 with one entry per bad field
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "",
+  "sku": "",
+  "quantity": 0,
+  "unitPrice": -1
+}
+
+### Rejected by the worker: quantity above the manual-approval threshold.
+### Create this one with Kafka running, then re-read it a moment later —
+### status flips from Pending to Rejected.
+POST {{host}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "cust-1001",
+  "sku": "KEYBOARD-87",
+  "quantity": 500,
+  "unitPrice": 10.00
+}
+
+### Unknown order — expect 404
+GET {{host}}/api/orders/00000000-0000-0000-0000-000000000000

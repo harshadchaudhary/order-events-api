@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <!-- Runs on the .NET 9 runtime, or rolls forward to a newer one if that is what is installed. -->
+    <RollForward>Major</RollForward>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderEvents.Infrastructure\OrderEvents.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderEvents.Contracts\OrderEvents.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
+
