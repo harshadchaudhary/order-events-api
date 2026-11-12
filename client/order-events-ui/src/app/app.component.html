@@ -1,0 +1,23 @@
+<main class="page">
+  <header><span class="eyebrow">ORDER EVENTS</span><h1>Create and track an order</h1><p>The API saves the order, while the Worker processes it asynchronously.</p></header>
+
+  <section class="layout">
+    <form class="card" #orderForm="ngForm" (ngSubmit)="submit()">
+      <h2>New order</h2>
+      <label>Customer ID<input name="customerId" [(ngModel)]="request.customerId" required placeholder="customer-2"></label>
+      <label>SKU<input name="sku" [(ngModel)]="request.sku" required placeholder="LAPTOP-002"></label>
+      <div class="row"><label>Quantity<input name="quantity" type="number" min="1" [(ngModel)]="request.quantity" required></label><label>Unit price<input name="unitPrice" type="number" min="0" step="0.01" [(ngModel)]="request.unitPrice" required></label></div>
+      <button type="submit" [disabled]="orderForm.invalid || loading">{{ loading ? 'Processing…' : 'Create order' }}</button>
+      <p class="error" *ngIf="error">{{ error }}</p>
+    </form>
+
+    <section class="card result" *ngIf="order">
+      <h2>Order result</h2><p class="id">{{ order.id }}</p>
+      <div class="status" [class.confirmed]="order.status === 'Confirmed'" [class.rejected]="order.status === 'Rejected'">{{ order.status }}</div>
+      <dl><dt>Product</dt><dd>{{ order.sku }}</dd><dt>Total</dt><dd>{{ order.totalAmount | currency }}</dd><dt>Reason</dt><dd>{{ order.statusReason || 'No rejection reason' }}</dd></dl>
+      <p *ngIf="order.status === 'Pending'">Waiting for the Worker to process the Kafka event…</p>
+    </section>
+  </section>
+
+  <section class="card history"><div class="history-title"><h2>Customer order history</h2><button type="button" class="secondary" (click)="loadCustomerOrders()">Refresh</button></div><p *ngIf="customerOrders.length === 0">Enter a customer ID and click Refresh.</p><div class="table" *ngIf="customerOrders.length"><div class="table-row heading"><span>SKU</span><span>Total</span><span>Status</span><span>Placed</span></div><div class="table-row" *ngFor="let item of customerOrders"><span>{{ item.sku }}</span><span>{{ item.totalAmount | currency }}</span><span>{{ item.status }}</span><span>{{ item.placedAt | date:'short' }}</span></div></div></section>
+</main>
