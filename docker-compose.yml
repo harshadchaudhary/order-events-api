@@ -80,6 +80,16 @@ services:
       sqlserver:
         condition: service_healthy
 
+  ui:
+    build:
+      context: ./client/order-events-ui
+      dockerfile: Dockerfile
+    container_name: order-events-ui
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
   worker:
     build:
       context: .
